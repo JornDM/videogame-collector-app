@@ -43,7 +43,22 @@ def get_games_by_search_term(payload: GamesRequest):
     videogames_response.raise_for_status()
     videogames = videogames_response.json()
 
+
+    if not videogames:
+        return []
+
     cover_ids = [str(game["cover"]) for game in videogames if "cover" in game]
+
+    if not cover_ids:
+        return [
+            {
+                "id": game.get("id"),
+                "name": game.get("name"),
+                "summary": game.get("summary"),
+                "coverUrl": None
+            }
+            for game in videogames
+        ]
 
     covers_response = requests.post(
         IGDB_COVERS_URL,
@@ -71,3 +86,4 @@ def get_games_by_search_term(payload: GamesRequest):
         }
         for game in videogames
     ]
+
