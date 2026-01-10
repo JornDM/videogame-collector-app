@@ -1,27 +1,27 @@
 import Constants from "../config/Constants";
+import Environment from "../config/Environment";
 
-const fetchGamesByName = async (name: string, authToken: string | null) => {
-    const query = `
-    fields name;
-    limit 10;
-    `;
+const fetchGamesByName = async (searchTerm: string, authToken: string | null) => {
 
   try {
-    const response = await fetch(`${Constants.gamesApiConfig.gamesApiBaseUrl}${Constants.gamesApiConfig.gamesEndpointName}`, {
+    const response = await fetch(`${Environment.backendUrl}${Constants.apiRoutes.games}`, {
       method: "POST",
       headers: {
         "Accept": "application/json",
-        "Client-ID": Constants.twitchAppConfig.twitchAppClientId,
-        "Authorization": `Bearer ${authToken}`,
-        "Content-Type": "text/plain"
+        "Content-Type": "application/json"
       },
-      body: query.trim()
+      body: JSON.stringify({
+        searchTerm: searchTerm,
+        authToken: authToken
+      })
     });
 
     if (!response.ok) {
       console.error("Failed to fetch games", response.status, response.statusText);
       return null;
     }
+
+    console.log(response);
 
     const data = await response.json();
     return data; // dit is een array van game objects met id + name
