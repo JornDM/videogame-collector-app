@@ -1,11 +1,10 @@
-import { GamesApiAuth } from "../auth/gamesApiAuth";
-
-import fetchGamesByName from "../api/games";
+import {fetchGamesByName} from "../api/games";
 import React from "react";
 import type Videogame from "../types/Videogame";
 import LoadingSpinner from "../components/UI/LoadingSpinner/LoadingSpinner";
 import type ErrorObject from "../types/ErrorObject";
 import GamesList from "../components/GamesList/GamesList";
+import { useGamesAuth } from "../auth/GamesAuthContext";
 
 const GamesPage = () => {
   const [enteredSearchTerm, setEnteredSearchTerm] = React.useState<string>("");
@@ -14,16 +13,16 @@ const GamesPage = () => {
   const [errorObject, setErrorObject] = React.useState<ErrorObject>({errorMessage: "", errorOccurred: false});
   const [gamesWereSearched, setGamesWereSearched] = React.useState<boolean>(false);
 
-
+  const {igdbToken} = useGamesAuth();
 
   async function searchButtonClickHandler(searchTerm: string): Promise<void> {
     try {
         setRetrievedVideoGames([]);
         setIsLoadingGamesRetrieval(true);
         setGamesWereSearched(true);
-        const authToken = await GamesApiAuth();
+        
 
-        const games: Videogame[] = await fetchGamesByName(searchTerm, authToken);
+        const games: Videogame[] = await fetchGamesByName(searchTerm, igdbToken);
         setRetrievedVideoGames(games)
     } catch (error: any) {
       setErrorObject({
