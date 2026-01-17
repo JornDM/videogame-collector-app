@@ -77,6 +77,6 @@ def get_games_by_search_term(payload: GamesRequest):
         for game in videogames
     ]
 
-# @app.post("/api/gameDetails")
-# def get_game_details_by_id(payload: GameDetailsRequest):
-#     print(payload)
+@app.post("/api/gameDetails")
+def get_game_details_by_id(payload: GameDetailsRequest):
+    print(payload)

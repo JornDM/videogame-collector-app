@@ -1,20 +1,33 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { getGameById } from "../api/games";
-import { GamesApiAuth } from "../auth/gamesApiAuth";
-
+import { useGamesAuth } from "../auth/GamesAuthContext";
 
 
 const GameDetailsPage = () => {
-        const gameId: number = Number(searchParams.get("gameId"));
         const [searchParams] = useSearchParams();
+          const {igdbToken} = useGamesAuth();
+        
+        const [isError, setIsError] = React.useState<boolean>(false);
 
-        const {fetchedGameWithDetails, setFetchedGameWIthDetails} = React.useState()
+        const gameId: number = Number(searchParams.get("gameId"));
+
+        const [fetchedGameWithDetails, setFetchedGameWIthDetails] = React.useState()
+
+        const handleGameByIdRetrieval = async () => {
+            try {
+                const gameWithDetails = await getGameById(gameId, igdbToken);
+                setFetchedGameWIthDetails(gameWithDetails)
+            } catch (error: any) {
+                setIsError(true);
+                console.error(error);
+            }
+        }
 
     return (
         <div>
             <p>This is a test!</p>
-            <button onClick={getGameById(gameId)}>testing jimmy</button>
+            <button onClick={async () => await handleGameByIdRetrieval()}>testing jimmy</button>
         </div>
        
     )

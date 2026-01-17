@@ -20,13 +20,10 @@ export const fetchGamesByName = async (searchTerm: string, authToken: string | n
 
 export const getGameById = async (gameId: number, authToken: string | null) => {
   try {
-    const bodyForBackend = JSON.stringify({
+      return (await postToBackend(apiRouteGameDetails, {
         gameId: gameId,
         authToken: authToken
-      });
-
-      return (await postToBackend(apiRouteGameDetails, bodyForBackend))
-
+      }));
   } catch (err) {
     console.error("Error fetching a game by id", err);
     return null;
